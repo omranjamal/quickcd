@@ -18,6 +18,15 @@ const args = await yargs(hideBin(process.argv)).argv;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+type TargetMapType = Record<
+  string,
+  {
+    label: string | null;
+    path: string;
+    relativePath: string;
+  }
+>;
+
 async function main() {
   const ttabPath = path.join(__dirname, "../node_modules/.bin/ttab");
 
@@ -29,24 +38,13 @@ async function main() {
 
     while (serachIn > rootPath) {
       const gitRootPath = path.join(serachIn, "./.git");
-      const monotabrcRootPath = path.join(serachIn, "./.monotabrc");
 
       const gitFolderExists =
         fs.existsSync(gitRootPath) && fs.lstatSync(gitRootPath).isDirectory();
 
-      const monotabrcExists =
-        fs.existsSync(monotabrcRootPath) &&
-        fs.lstatSync(monotabrcRootPath).isFile();
-
-      if (gitFolderExists || monotabrcExists) {
+      if (gitFolderExists) {
         return {
           path: serachIn,
-          ...(monotabrcExists
-            ? {
-                monotabrcFileExists: true,
-                monotabrcFilePath: monotabrcRootPath,
-              }
-            : null),
         };
       }
 
@@ -66,25 +64,26 @@ async function main() {
 
   const monoRoot = monoRepoRoot?.path ?? process.cwd();
 
-  console.info(chalk.blue(`Using: ${monoRoot}`));
-
-  type TargetMapType = Record<
-    string,
-    {
-      label: string | null;
-      path: string;
-    }
-  >;
+  console.info(`\nUsing: ${monoRoot}\n`);
 
   const targets = returnOf(() => {
     const targetMap: TargetMapType = {};
 
-    function traverse(
-      root: string,
-      map: TargetMapType,
-      globalTraverse: boolean = false
-    ) {
-      const potentialMonotabrcPath = path.join(root, ".monotabrc");
+    function add(label: string | null, fullPath: string) {
+      const resolvedPath = path.resolve(fullPath);
+
+      targetMap[resolvedPath] = {
+        label: label,
+        path: resolvedPath === path.resolve(process.cwd()) ? "./" : resolvedPath,
+        relativePath:
+          resolvedPath === path.resolve(process.cwd())
+            ? "."
+            : path.relative(process.cwd(), resolvedPath),
+      };
+    }
+
+    function traverse(root: string, map: TargetMapType) {
+      const potentialMonotabrcPath = path.join(root, ".monotabrc.json");
 
       const config = returnOf(() => {
         if (
@@ -123,10 +122,7 @@ async function main() {
         }
       });
 
-      map[root] = {
-        label: config?.label ?? null,
-        path: root === monoRoot ? "." : path.relative(monoRoot, root),
-      };
+      add(null, root);
 
       const includeGlobs = returnOf(() => {
         if (config?.include) {
@@ -155,19 +151,18 @@ async function main() {
         }),
       ];
 
-      const matchedPaths = globalTraverse
-        ? globbySync("./**/.{git,monotabrc}", {
-            cwd: root,
-            gitignore: true,
-            onlyFiles: false,
-            expandDirectories: true,
-            ignore: excludeGlobs,
-            suppressErrors: true,
-          })
-        : [];
+      const matchedPaths = globbySync("./**/.{git,monotabrc.json}", {
+        cwd: root,
+        gitignore: true,
+        onlyFiles: false,
+        expandDirectories: true,
+        ignore: excludeGlobs,
+        suppressErrors: true,
+      });
 
       for (const matchedPath of matchedPaths) {
-        traverse(path.dirname(path.join(root, matchedPath)), map);
+        const mactchedFullPath = path.dirname(path.join(root, matchedPath));
+        add(null, mactchedFullPath);
       }
 
       for (const pathGlob of includeGlobs) {
@@ -180,12 +175,13 @@ async function main() {
         });
 
         for (const matchedPath of matchedPaths) {
-          traverse(path.join(root, matchedPath), map, false);
+          const mactchedFullPath = path.dirname(path.join(root, matchedPath));
+          add(null, mactchedFullPath);
         }
       }
     }
 
-    traverse(monoRoot, targetMap, true);
+    traverse(monoRoot, targetMap);
 
     return Object.values(targetMap);
   }).sort((a, b) => {
@@ -212,7 +208,7 @@ async function main() {
             message: "SELECT A PATH",
             type: "autocomplete",
             choices: choices.map((choice) => ({
-              name: `(${choice.label ?? ""}): ${choice.path}`,
+              name: `- ${choice.path.replace(process.env.HOME ?? '', '~')}`,
               value: choice.path,
             })),
             multiple: false,
