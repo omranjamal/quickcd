@@ -12,11 +12,14 @@
     "build:watch": "tsc -w"
   },
   "dependencies": {
+    "@types/yargs": "^17.0.24",
     "enquirer": "^2.4.1",
     "execa": "^7.2.0",
     "globby": "^13.2.2",
     "scope-utilities": "^1.0.0",
-    "ttab": "0.8.0"
+    "ttab": "0.8.0",
+    "yargs": "^17.7.2",
+    "zod": "^3.22.1"
   },
   "devDependencies": {
     "@types/node": "20.5.0",
