@@ -15,6 +15,11 @@
     "monotab": "./dist/index.mjs",
     "mtab": "./dist/index.mjs"
   },
+  "author": {
+    "name": "Omran Jamal",
+    "email": "omran@omranjamal.me",
+    "url": "https://omranjamal.me"
+  },
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc -w"
