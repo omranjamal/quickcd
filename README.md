@@ -1,3 +1,12 @@
+![npm](https://img.shields.io/npm/v/monotab)
+![NPM](https://img.shields.io/npm/l/monotab)
+![GitHub issues](https://img.shields.io/github/issues/omranjamal/monotab)
+![npm bundle size](https://img.shields.io/bundlephobia/min/monotab)
+![npm](https://img.shields.io/npm/dw/monotab)
+![GitHub forks](https://img.shields.io/github/forks/omranjamal/monotab)
+![GitHub Repo stars](https://img.shields.io/github/stars/omranjamal/monotab)
+
+
 # monotab
 
 ![monotab demo](https://github.com/omranjamal/monotab/blob/static/monotab-demo.gif?raw=true)
