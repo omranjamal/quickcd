@@ -47,7 +47,7 @@ Just write `monotab` or `mtab` under any repository that contains submodules, an
 monotab
 
 # this one too, use them interchangably
-mt
+mtab
 ```
 
 ### Tab Duplication
@@ -56,16 +56,16 @@ mt
 # this is just using the filter and relying on the
 # assumption that this will only have one listing.
 
-mt .
+mtab .
 ```
 
-Alternatively. Launch `mt` press `.` and then press `Enter`
+Alternatively. Launch `mtab` press `.` and then press `Enter`
 
-Alternatively to the alternative: Launch `mt` and then press `Enter`
+Alternatively to the alternative: Launch `mtab` and then press `Enter`
 
 ### Filter The List
 
-Launch `mt` then start typing.
+Launch `mtab` then start typing.
 
 Alternatively, pass in a second argument to pre-filter
 the list.
@@ -74,7 +74,7 @@ the list.
 # this will only show a list where the items all
 # have "end" in them.
 
-mt end
+mtab end
 ```
 
 ## Configuration
@@ -113,6 +113,7 @@ that are glob patterns. Monotab uses [sindresorhus/globby](https://github.com/si
 ```
 
 ## Behaviour
+
 ### Repo Root Detection
 
 `monotab` travels up the chain of directories from current working directory
