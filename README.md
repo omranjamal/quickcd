@@ -117,4 +117,4 @@ terminals are currnently supported on Linux and MacOS.
 
 ## License
 
-PUBLIC DOMAIN
+CC0-1.0 (public domain)

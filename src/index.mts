@@ -13,10 +13,62 @@ import { schema } from "./monotabrcSchema.mjs";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
-const args = await yargs(hideBin(process.argv)).argv;
+const args = await yargs(hideBin(process.argv)).help(false).argv;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const art = fs
+  .readFileSync(path.join(__dirname, "../art.txt"))
+  .toString("utf-8");
+
+const packageJSON = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "../package.json")).toString("utf-8")
+);
+
+const help = `
+${art}
+monotab v${packageJSON.version}
+
+${packageJSON.description}
+
+Usage:
+
+mt                Shows interactive directory selector.
+                  Not: will immediate duplicate tab if the CWD is the only matching directory.
+
+mt [filter]       A string to match against list, to pre-filter.
+                  Note: will immediately launch a tab if there is only a single match.
+
+mt -h, --help     Show this help menu
+mt -v, --version  Show installed version
+`;
+
+const namedArgsSet = new Set<string>(Object.keys(args));
+
+if ("h" in args || "help" in args) {
+  console.log(help);
+  process.exit(0);
+} else if ("version" in args || "v" in args) {
+  console.log(packageJSON.version);
+  process.exit(0);
+}
+
+namedArgsSet.delete("_");
+namedArgsSet.delete("$0");
+
+namedArgsSet.delete("v");
+namedArgsSet.delete("version");
+namedArgsSet.delete("h");
+namedArgsSet.delete("help");
+
+if (namedArgsSet.size > 0) {
+  const arg = [...namedArgsSet][0];
+
+  console.error(chalk.red(`cli argument "${arg}" not recognized.`));
+
+  process.exit(1);
+}
 
 type TargetMapType = Record<
   string,
@@ -74,7 +126,8 @@ async function main() {
 
       targetMap[resolvedPath] = {
         label: label,
-        path: resolvedPath === path.resolve(process.cwd()) ? "./" : resolvedPath,
+        path:
+          resolvedPath === path.resolve(process.cwd()) ? "./" : resolvedPath,
         relativePath:
           resolvedPath === path.resolve(process.cwd())
             ? "."
@@ -208,7 +261,7 @@ async function main() {
             message: "SELECT A PATH",
             type: "autocomplete",
             choices: choices.map((choice) => ({
-              name: `- ${choice.path.replace(process.env.HOME ?? '', '~')}`,
+              name: `- ${choice.path.replace(process.env.HOME ?? "", "~")}`,
               value: choice.path,
             })),
             multiple: false,
