@@ -1,6 +1,6 @@
 {
   "name": "monotab",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Open a terminal tab to any folder or submodule inside a mono-repo.",
   "keywords": [
     "tab",
@@ -37,5 +37,9 @@
     "nodemon": "^2.0.22",
     "typescript": "^4.9.5"
   },
-  "license": "CC0-1.0"
+  "license": "CC0-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/omranjamal/monotab.git"
+  }
 }
