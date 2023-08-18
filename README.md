@@ -1,6 +1,6 @@
 # monotab
 
-![monotab demo](https://github.com/omranjamal/monotab/blob/static/demo.gif?raw=true)
+![monotab demo](https://github.com/omranjamal/monotab/blob/static/monotab-demo.gif?raw=true)
 
 > A command to (really quickly) open a new terminal tab in any of the directories or submodules in your repo.
 
@@ -31,7 +31,7 @@ npm install -g monotab
 
 ### Basics
 
-Just write `monotab` or `mt` under any repository that contains submodules, and it should start working.
+Just write `monotab` or `mtab` under any repository that contains submodules, and it should start working.
 
 ```bash
 # this starts an interactive directory selector
@@ -103,6 +103,24 @@ that are glob patterns. Monotab uses [sindresorhus/globby](https://github.com/si
 }
 ```
 
+## Behaviour
+### Repo Root Detection
+
+`monotab` travels up the chain of directories from current working directory
+and looks for the `.git` directory or the `monotabrc.json` file. If there are multiple
+along the parent directory chain, the directory that matches at the highest level
+is used.
+
+### Filter
+
+Filter tries to match it with the entire path, but does not support matching brackets
+of any kind.
+
+### Singluar Match
+
+If there is only a single match, `monotab` automatically creates a tab in that
+single matched path.
+
 ## Supported On
 
 `monotab` uses [mklement0/ttab](https://github.com/mklement0/ttab)
@@ -112,8 +130,18 @@ terminals are currnently supported on Linux and MacOS.
 1. Linux
     - Gnome Terminal
 2. MacOS
-    - Terminal
-    - iTerm2
+    - Terminal _(not tested)_
+    - iTerm2 _(not tested)_
+
+## Features In Progress
+
+- [ ] Windows Terminal Support
+- [ ] Directory Labels
+
+## Known Issues
+
+[enquirer/enquirer](https://github.com/enquirer/enquirer) has a
+hard time handling brackets as input.
 
 ## License
 

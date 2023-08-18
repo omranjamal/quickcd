@@ -87,23 +87,31 @@ async function main() {
 
   const monoRepoRoot = returnOf(() => {
     let serachIn = process.cwd();
+    let foundIn: string | null = null;
 
     while (serachIn > rootPath) {
       const gitRootPath = path.join(serachIn, "./.git");
+      const monotabrcRootPath = path.join(serachIn, "./.monotabrc.json");
 
       const gitFolderExists =
         fs.existsSync(gitRootPath) && fs.lstatSync(gitRootPath).isDirectory();
 
-      if (gitFolderExists) {
-        return {
-          path: serachIn,
-        };
+      const monotabrcFileExists =
+        fs.existsSync(monotabrcRootPath) &&
+        fs.lstatSync(monotabrcRootPath).isFile();
+
+      if (gitFolderExists || monotabrcFileExists) {
+        foundIn = serachIn;
       }
 
       serachIn = path.join(serachIn, "../");
     }
 
-    return null;
+    return foundIn
+      ? {
+          path: foundIn,
+        }
+      : null;
   });
 
   if (!monoRepoRoot) {
