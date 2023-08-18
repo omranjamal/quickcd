@@ -42,6 +42,8 @@ matb [filter]       A string to match against list, to pre-filter.
 
 matb -h, --help     Show this help menu
 matb -v, --version  Show installed version
+
+Note: monotab and mtab are alias, you can use interchangably.
 `;
 
 const namedArgsSet = new Set<string>(Object.keys(args));
