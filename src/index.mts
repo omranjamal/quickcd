@@ -34,14 +34,14 @@ ${packageJSON.description}
 
 Usage:
 
-mt                Shows interactive directory selector.
-                  Not: will immediate duplicate tab if the CWD is the only matching directory.
+matb                Shows interactive directory selector.
+                    Note: will immediate duplicate tab if the CWD is the only matching directory.
 
-mt [filter]       A string to match against list, to pre-filter.
-                  Note: will immediately launch a tab if there is only a single match.
+matb [filter]       A string to match against list, to pre-filter.
+                    Note: will immediately launch a tab if there is only a single match.
 
-mt -h, --help     Show this help menu
-mt -v, --version  Show installed version
+matb -h, --help     Show this help menu
+matb -v, --version  Show installed version
 `;
 
 const namedArgsSet = new Set<string>(Object.keys(args));
