@@ -34,13 +34,26 @@ ${packageJSON.description}
 
 Usage:
 
-matb                Shows interactive directory selector.
-                    Note: will immediate duplicate tab if the CWD is the only matching directory.
+matb [filter] [--notab]
+      Renders an interactive list of directories that you potentially want to
+      open a new tab in.
 
-matb [filter]       A string to match against list, to pre-filter.
-                    Note: will immediately launch a tab if there is only a single match.
+      Note: if there is only one match, it will immediately open a new tab in that
+      directory or return if --no-tab is selected.
 
-matb -h, --help     Show this help menu
+      [filter]  allows you to pre-filter the list.
+
+      --notab   does not attempt to automatically open a new tab.
+                Meant to be used with shell aliases to support
+                cd-ing in the current terminal.
+
+
+matb --alias [alias] 
+      Prints a bash script that can be eval-ed to introduce
+      a cli alias which allows you to cd in the current terminal
+      instead of opening a new tab.
+
+matb -h, --help       Show this help menu
 matb -v, --version  Show installed version
 
 Note: monotab and mtab are alias, you can use interchangably.
@@ -54,6 +67,18 @@ if ("h" in args || "help" in args) {
 } else if ("version" in args || "v" in args) {
   console.log(packageJSON.version);
   process.exit(0);
+} else if ("alias" in args) {
+  const aliasScript = fs
+    .readFileSync(path.join(__dirname, "../cd-alias.sh"))
+    .toString("utf-8");
+
+  console.log(
+    typeof args.alias === 'string'
+      ? aliasScript.replace('monocd', args.alias)
+      : aliasScript
+  );
+
+  process.exit(0);
 }
 
 namedArgsSet.delete("_");
@@ -63,6 +88,8 @@ namedArgsSet.delete("v");
 namedArgsSet.delete("version");
 namedArgsSet.delete("h");
 namedArgsSet.delete("help");
+namedArgsSet.delete("alias");
+namedArgsSet.delete("notab");
 
 if (namedArgsSet.size > 0) {
   const arg = [...namedArgsSet][0];
@@ -126,7 +153,7 @@ async function main() {
 
   const monoRoot = monoRepoRoot?.path ?? process.cwd();
 
-  console.info(`\nUsing: ${monoRoot}\n`);
+  console.info(`Using Root: ${monoRoot}`);
 
   const targets = returnOf(() => {
     const targetMap: TargetMapType = {};
@@ -286,11 +313,16 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(
-    chalk.blue(`Opening terminal tab in ${path.resolve(selectedPath)}`)
-  );
+  if (!('notab' in args)) {
+    process.stdout.write(chalk.blue(`Opening terminal tab in `));
+  }
 
-  execa(ttabPath, ["-d", selectedPath]);
+  process.stderr.write(`${path.resolve(selectedPath)}`);
+
+  if (!('notab' in args)) {
+    execa(ttabPath, ["-d", selectedPath]);
+    process.stdout.write(`\n`);
+  }
 }
 
 try {
