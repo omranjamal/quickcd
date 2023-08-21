@@ -1,6 +1,6 @@
 {
   "name": "monotab",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Open a terminal tab to any folder or submodule inside a mono-repo.",
   "keywords": [
     "tab",
