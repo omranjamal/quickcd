@@ -17,6 +17,7 @@
 
 - Duplicate terminal: `Ctrl` + `Shift` + `T` but in command form.
 - Open tab from anywhere under a repo: Automatically detects the repo root.
+- Support for `cd`-ing in current terminal (useful over ssh, or in IDE integrated terminal)
 - Automatically picks up submodules and git repos.
 - Include any directory (even if they aren't submodules) via glob patterns.
 - Exclude any directory.
@@ -112,6 +113,50 @@ that are glob patterns. Monotab uses [sindresorhus/globby](https://github.com/si
 }
 ```
 
+## Setup `cd` In Current Terminal
+
+If you don't want to open a new terminal tab, or if you are using a terminal over SSH or if you're using your IDE's integrated terminal
+(like on WebStorm or VSCode), `cd`-ing is your best friend.
+
+To this you will need to add an alias to your `.bashrc` or `.zshrc`
+
+```bash
+# Assuming you use bash
+
+printf "\n# monotab\neval \$(monotab --alias)\n" >> ~/.bashrc
+```
+
+Now you can use `monocd` to get the familiar interactive CLI,
+but instead of opening a new terminal tab, it will cd you
+to the directory.
+
+### Customizing the Alias
+
+Just pass in a value to `--alias`
+
+```bash
+printf "\n# monotab\neval \$(monotab --alias cdm)\n" >> ~/.bashrc
+```
+
+Open running this, your alias will be `cdm` instead of `monocd`.
+
+### Alias Performance
+
+> ...but node.js' startup time is far too slow
+> it's making my terminal slow.
+
+We hear you, I hate slow terminal startups too.
+Just go into your `.bashrc` or `.zshrc` and paste the following at the end.
+
+```bash
+function monocd {
+    DIR_PATH=$( [[ ! -z "$1" ]] && (mtab $1 --notab 3>&1 1>&2 2>&3) || (mtab --notab 3>&1 1>&2 2>&3) );
+    cd $DIR_PATH;
+};
+```
+
+Replaced `monocd` with anything else if you want the command to be called anything other than `monocd`.
+
 ## Behaviour
 
 ### Repo Root Detection
@@ -143,8 +188,9 @@ terminals are currnently supported on Linux and MacOS.
     - Terminal _(not tested)_
     - iTerm2 _(not tested)_
 
-## Features In Progress
+## Roadmap
 
+- [x] `cd` assistance in current terminal
 - [ ] Windows Terminal Support
 - [ ] Directory Labels
 
