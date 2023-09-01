@@ -21,8 +21,12 @@
     "url": "https://omranjamal.me"
   },
   "scripts": {
-    "build": "tsc",
-    "build:watch": "tsc -w"
+    "build:ts": "tsc",
+    "build:schema": "node ./dist/build-config-schema.mjs > ./config-schema.json",
+    "build:ts:watch": "tsc -w",
+    "build:schema:watch": "nodemon --watch ./dist/build-config-schema.mjs --exec \"pnpm build:schema\"",
+    "build": "pnpm build:ts && pnpm build:schema",
+    "build:watch": "concurrently pnpm:build:ts:watch pnpm:build:schema:watch"
   },
   "dependencies": {
     "@types/yargs": "^17.0.24",
@@ -38,10 +42,11 @@
   },
   "devDependencies": {
     "@types/node": "20.5.0",
-    "concurrently": "^8.0.1",
+    "concurrently": "^8.2.1",
     "linkemon": "github:omranjamal/linkemon",
     "nodemon": "^2.0.22",
-    "typescript": "^4.9.5"
+    "typescript": "^5.2.2",
+    "zod-to-json-schema": "^3.21.4"
   },
   "license": "CC0-1.0",
   "repository": {
