@@ -12,6 +12,7 @@ import enquirer from "enquirer";
 import { schema } from "./monotabrcSchema.mjs";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+import { parse as parseYAML } from 'yaml';
 
 const args = await yargs(hideBin(process.argv)).help(false).argv;
 
@@ -138,8 +139,8 @@ async function main() {
 
     return foundIn
       ? {
-          path: foundIn,
-        }
+        path: foundIn,
+      }
       : null;
   });
 
@@ -214,7 +215,7 @@ async function main() {
 
       add(null, root);
 
-      const includeGlobs = returnOf(() => {
+      const monotabrcIncludedGlobs = returnOf(() => {
         if (config?.include) {
           if (typeof config.include === "string") {
             return [config.include];
@@ -225,6 +226,59 @@ async function main() {
 
         return [];
       });
+
+      // For both npm and yarn
+      const npmWorkspaces: string[] = returnOf(() => {
+        if (config?.npmWorkspaces === false || config?.yarnWorkspaces === false) {
+          return [];
+        }
+
+        const packageJSONPath = path.join(root, "package.json");
+        const contents = fs.existsSync(packageJSONPath) ? fs.readFileSync(packageJSONPath).toString('utf-8') : '{}';
+
+        try {
+          const parsed = JSON.parse(contents);
+
+          if (!('workspaces' in parsed)) {
+            return [];
+          }
+
+          return parsed.workspaces;
+        } catch {
+          console.error(
+            chalk.yellow(`⚠️ ${packageJSONPath} is not valid JSON.`)
+          );
+        }
+
+        return [];
+      });
+
+      const pnpmWorkspaces: string[] = returnOf(() => {
+        if (config?.pnpmWorkspaces === false) {
+          return [];
+        }
+
+        const pnpmWorkspaceYAMLPath = path.join(root, "pnpm-workspace.yaml");
+        const contents = fs.existsSync(pnpmWorkspaceYAMLPath) ? fs.readFileSync(pnpmWorkspaceYAMLPath).toString('utf-8') : '{}';
+
+        try {
+          const parsed = parseYAML(contents);
+
+          if (!('packages' in parsed)) {
+            return [];
+          }
+
+          return parsed.packages;
+        } catch {
+          console.error(
+            chalk.yellow(`⚠️ ${pnpmWorkspaceYAMLPath} is not valid YAML.`)
+          );
+        }
+
+        return [];
+      });
+
+      const includeGlobs = [...monotabrcIncludedGlobs, ...npmWorkspaces, ...pnpmWorkspaces];
 
       const excludeGlobs = [
         "**/node_modules/**",
@@ -265,7 +319,7 @@ async function main() {
         });
 
         for (const matchedPath of matchedPaths) {
-          const mactchedFullPath = path.dirname(path.join(root, matchedPath));
+          const mactchedFullPath = path.resolve(path.join(root, matchedPath));
           add(null, mactchedFullPath);
         }
       }
@@ -286,27 +340,27 @@ async function main() {
 
   const choices = args._[0]
     ? targets.filter((target) => {
-        return target.path.includes(`${args._[0]}`);
-      })
+      return target.path.includes(`${args._[0]}`);
+    })
     : targets;
 
   const selectedPath =
     choices.length > 1
       ? (
-          (await enquirer.prompt({
-            name: "path",
-            message: "SELECT A PATH",
-            type: "autocomplete",
-            choices: choices.map((choice) => ({
-              name: `- ${choice.path.replace(process.env.HOME ?? "", "~")}`,
-              value: choice.path,
-            })),
-            multiple: false,
-          })) as any
-        ).path
+        (await enquirer.prompt({
+          name: "path",
+          message: "SELECT A PATH",
+          type: "autocomplete",
+          choices: choices.map((choice) => ({
+            name: `- ${choice.path.replace(process.env.HOME ?? "", "~")}`,
+            value: choice.path,
+          })),
+          multiple: false,
+        })) as any
+      ).path
       : choices.length === 1
-      ? choices[0].path
-      : null;
+        ? choices[0].path
+        : null;
 
   if (!selectedPath) {
     console.log(chalk.red(`no matching paths found. run with -h to see help.`));
@@ -327,4 +381,4 @@ async function main() {
 
 try {
   await main();
-} catch {}
+} catch { }

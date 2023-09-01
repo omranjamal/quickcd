@@ -19,6 +19,7 @@
 - Open tab from anywhere under a repo: Automatically detects the repo root.
 - Support for `cd`-ing in current terminal (useful over ssh, or in IDE integrated terminal)
 - Automatically picks up submodules and git repos.
+- Automatically picks up [npm workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces/), [yarn workspaces](https://classic.yarnpkg.com/lang/en/docs/workspaces/) and [pnpm workspaces](https://pnpm.io/pnpm-workspace_yaml).
 - Include any directory (even if they aren't submodules) via glob patterns.
 - Exclude any directory.
 - Interactive directory picker with filtering.

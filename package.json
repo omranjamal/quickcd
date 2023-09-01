@@ -1,6 +1,6 @@
 {
   "name": "monotab",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Open a terminal tab to any folder or submodule inside a mono-repo.",
   "keywords": [
     "tab",
@@ -26,14 +26,15 @@
   },
   "dependencies": {
     "@types/yargs": "^17.0.24",
+    "chalk": "5.3.0",
     "enquirer": "^2.4.1",
     "execa": "^7.2.0",
     "globby": "^13.2.2",
     "scope-utilities": "^1.0.0",
     "ttab": "0.8.0",
+    "yaml": "^2.3.2",
     "yargs": "^17.7.2",
-    "zod": "^3.22.1",
-    "chalk": "5.3.0"
+    "zod": "^3.22.1"
   },
   "devDependencies": {
     "@types/node": "20.5.0",
