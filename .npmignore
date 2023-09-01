@@ -1,2 +1,2 @@
-src/*
+src/**/*
 dist/build-config-schema.mjs
