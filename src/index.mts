@@ -12,7 +12,8 @@ import enquirer from "enquirer";
 import { schema } from "./monotabrcSchema.mjs";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-import { parse as parseYAML } from 'yaml';
+import { parse as parseYAML } from "yaml";
+import { openTab } from "./openTab.mjs";
 
 const args = await yargs(hideBin(process.argv)).help(false).argv;
 
@@ -74,8 +75,8 @@ if ("h" in args || "help" in args) {
     .toString("utf-8");
 
   console.log(
-    typeof args.alias === 'string'
-      ? aliasScript.replace('monocd', args.alias)
+    typeof args.alias === "string"
+      ? aliasScript.replace("monocd", args.alias)
       : aliasScript
   );
 
@@ -110,8 +111,6 @@ type TargetMapType = Record<
 >;
 
 async function main() {
-  const ttabPath = path.join(__dirname, "../node_modules/.bin/ttab");
-
   const rootPath =
     os.platform() === "win32" ? process.cwd().split(path.sep)[0] : "/";
 
@@ -139,8 +138,8 @@ async function main() {
 
     return foundIn
       ? {
-        path: foundIn,
-      }
+          path: foundIn,
+        }
       : null;
   });
 
@@ -229,17 +228,22 @@ async function main() {
 
       // For both npm and yarn
       const npmWorkspaces: string[] = returnOf(() => {
-        if (config?.npmWorkspaces === false || config?.yarnWorkspaces === false) {
+        if (
+          config?.npmWorkspaces === false ||
+          config?.yarnWorkspaces === false
+        ) {
           return [];
         }
 
         const packageJSONPath = path.join(root, "package.json");
-        const contents = fs.existsSync(packageJSONPath) ? fs.readFileSync(packageJSONPath).toString('utf-8') : '{}';
+        const contents = fs.existsSync(packageJSONPath)
+          ? fs.readFileSync(packageJSONPath).toString("utf-8")
+          : "{}";
 
         try {
           const parsed = JSON.parse(contents);
 
-          if (!('workspaces' in parsed)) {
+          if (!("workspaces" in parsed)) {
             return [];
           }
 
@@ -259,12 +263,14 @@ async function main() {
         }
 
         const pnpmWorkspaceYAMLPath = path.join(root, "pnpm-workspace.yaml");
-        const contents = fs.existsSync(pnpmWorkspaceYAMLPath) ? fs.readFileSync(pnpmWorkspaceYAMLPath).toString('utf-8') : '{}';
+        const contents = fs.existsSync(pnpmWorkspaceYAMLPath)
+          ? fs.readFileSync(pnpmWorkspaceYAMLPath).toString("utf-8")
+          : "{}";
 
         try {
           const parsed = parseYAML(contents);
 
-          if (!('packages' in parsed)) {
+          if (!("packages" in parsed)) {
             return [];
           }
 
@@ -278,7 +284,11 @@ async function main() {
         return [];
       });
 
-      const includeGlobs = [...monotabrcIncludedGlobs, ...npmWorkspaces, ...pnpmWorkspaces];
+      const includeGlobs = [
+        ...monotabrcIncludedGlobs,
+        ...npmWorkspaces,
+        ...pnpmWorkspaces,
+      ];
 
       const excludeGlobs = [
         "**/node_modules/**",
@@ -340,45 +350,45 @@ async function main() {
 
   const choices = args._[0]
     ? targets.filter((target) => {
-      return target.path.includes(`${args._[0]}`);
-    })
+        return target.path.includes(`${args._[0]}`);
+      })
     : targets;
 
   const selectedPath =
     choices.length > 1
       ? (
-        (await enquirer.prompt({
-          name: "path",
-          message: "SELECT A PATH",
-          type: "autocomplete",
-          choices: choices.map((choice) => ({
-            name: `- ${choice.path.replace(process.env.HOME ?? "", "~")}`,
-            value: choice.path,
-          })),
-          multiple: false,
-        })) as any
-      ).path
+          (await enquirer.prompt({
+            name: "path",
+            message: "SELECT A PATH",
+            type: "autocomplete",
+            choices: choices.map((choice) => ({
+              name: `- ${choice.path.replace(process.env.HOME ?? "", "~")}`,
+              value: choice.path,
+            })),
+            multiple: false,
+          })) as any
+        ).path
       : choices.length === 1
-        ? choices[0].path
-        : null;
+      ? choices[0].path
+      : null;
 
   if (!selectedPath) {
     console.log(chalk.red(`no matching paths found. run with -h to see help.`));
     process.exit(1);
   }
 
-  if (!('notab' in args)) {
+  if (!("notab" in args)) {
     process.stdout.write(chalk.blue(`Opening terminal tab in `));
   }
 
   process.stderr.write(`${path.resolve(selectedPath)}`);
 
-  if (!('notab' in args)) {
-    execa(ttabPath, ["-d", selectedPath]);
+  if (!("notab" in args)) {
+    await openTab(selectedPath);
     process.stdout.write(`\n`);
   }
 }
 
 try {
   await main();
-} catch { }
+} catch {}

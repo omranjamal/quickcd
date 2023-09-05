@@ -34,6 +34,7 @@
     "enquirer": "^2.4.1",
     "execa": "^7.2.0",
     "globby": "^13.2.2",
+    "monotab": "link:",
     "scope-utilities": "^1.0.0",
     "ttab": "0.8.0",
     "yaml": "^2.3.2",
