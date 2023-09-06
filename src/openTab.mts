@@ -28,13 +28,13 @@ export async function openTab(terminalPath: string) {
       terminalPID,
     ]);
 
-    const terinalProgramString =
+    const terminalProgramString =
       terinalProgramStringRaw.split("\n").pop() ?? "";
 
     const terminalProgram = returnOf(() => {
-      if (terinalProgramString.indexOf("gnome-terminal") >= 0) {
+      if (terminalProgramString.indexOf("gnome-terminal") >= 0) {
         return "gnome-terminal";
-      } else if (terinalProgramString.indexOf("konsole") >= 0) {
+      } else if (terminalProgramString.indexOf("konsole") >= 0) {
         return "konsole";
       } else {
         return null;
@@ -53,7 +53,7 @@ export async function openTab(terminalPath: string) {
       console.error(
         chalk.red(
           "Possibly unsupported terminal program.",
-          terinalProgramString
+          terminalProgramString
         )
       );
     }
