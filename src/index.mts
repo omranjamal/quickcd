@@ -323,7 +323,7 @@ async function main() {
         const matchedPaths = globbySync(pathGlob, {
           cwd: root,
           onlyDirectories: true,
-          expandDirectories: true,
+          expandDirectories: false,
           ignore: excludeGlobs,
           suppressErrors: true,
         });
