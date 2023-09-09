@@ -23,7 +23,7 @@
   "scripts": {
     "build:ts": "tsc",
     "build:schema": "node ./dist/build-config-schema.mjs > ./config-schema.json",
-    "build:ts:watch": "tsc -w",
+    "build:ts:watch": "tsc -w --preserveWatchOutput",
     "build:schema:watch": "nodemon --watch ./dist/build-config-schema.mjs --exec \"pnpm build:schema\"",
     "build": "pnpm build:ts && pnpm build:schema",
     "build:watch": "concurrently pnpm:build:ts:watch pnpm:build:schema:watch"
