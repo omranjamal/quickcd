@@ -1,39 +1,31 @@
 {
-  "allOf": [
-    {
-      "type": "object",
-      "properties": {
-        "npmWorkspaces": {
-          "type": "boolean"
-        },
-        "yarnWorkspaces": {
-          "type": "boolean"
-        },
-        "pnpmWorkspaces": {
-          "type": "boolean"
-        },
-        "include": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "exclude": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
+  "type": "object",
+  "properties": {
+    "npmWorkspaces": {
+      "type": "boolean"
+    },
+    "yarnWorkspaces": {
+      "type": "boolean"
+    },
+    "pnpmWorkspaces": {
+      "type": "boolean"
+    },
+    "include": {
+      "type": "array",
+      "items": {
+        "type": "string"
       }
     },
-    {
-      "type": "object",
-      "properties": {
-        "$schema": {
-          "type": "string"
-        }
+    "exclude": {
+      "type": "array",
+      "items": {
+        "type": "string"
       }
+    },
+    "$schema": {
+      "type": "string"
     }
-  ],
+  },
+  "additionalProperties": false,
   "$schema": "http://json-schema.org/draft-07/schema#"
 }
