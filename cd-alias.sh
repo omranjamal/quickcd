@@ -14,4 +14,6 @@ function quickcd {
   fi
 }
 
+# -- quickcd-shell-aliases --
+
 # end: quickcd

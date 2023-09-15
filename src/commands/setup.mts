@@ -6,6 +6,7 @@ import path from "path";
 import chalk from "chalk";
 import { args } from "../utils/args.mjs";
 import enquirer from "enquirer";
+import { embedAliases } from "./alias.mjs";
 
 export async function runSetup() {
   const aliasScriptString = fs
@@ -17,12 +18,11 @@ export async function runSetup() {
     )
     .toString("utf-8");
 
-  const aliasScript =
-    typeof args.alias === "string"
-      ? aliasScriptString
-          .replace("function quickcd", `function ${args.alias}`)
-          .replace("--alias quickcd", `--alias ${args.alias}`)
-      : aliasScriptString;
+  const aliasScript = embedAliases(
+    aliasScriptString,
+    args.alias,
+    !!args.efficient
+  );
 
   const zshrcPath = path.join(process.env.HOME ?? "~/", ".zshrc");
   const bashrcPath = path.join(process.env.HOME ?? "~/", ".bashrc");
