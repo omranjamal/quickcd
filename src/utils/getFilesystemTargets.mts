@@ -14,7 +14,10 @@ export type TargetMapType = Record<
   }
 >;
 
-export async function getTargets(root: string, config?: ConfigSchemaType) {
+export async function getFilesystemTargets(
+  root: string,
+  config?: ConfigSchemaType
+) {
   return (
     await returnOf(async () => {
       const targetMap: TargetMapType = {};

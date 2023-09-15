@@ -11,7 +11,7 @@ import { runSetup } from "./commands/setup.mjs";
 import { runAlias } from "./commands/alias.mjs";
 import { validateArguments } from "./utils/validateArguments.mjs";
 import { getRoot } from "./utils/getRoot.mjs";
-import { getTargets } from "./utils/getTargets.mjs";
+import { getFilesystemTargets } from "./utils/getFilesystemTargets.mjs";
 import { loadConfig } from "./utils/loadConfig.mjs";
 
 async function main() {
@@ -42,7 +42,7 @@ async function main() {
 
   console.info(`Using Root: ${quickRoot}`);
 
-  const targets = await getTargets(quickRoot, config);
+  const targets = await getFilesystemTargets(quickRoot, config);
 
   const choices = args._[0]
     ? targets.filter((target) => {
