@@ -8,9 +8,12 @@
 
 # quickcd
 
+A command to (really quickly) open a new terminal tab in any of the directories or submodules in your repo.
+
 ![quickcd demo](https://github.com/omranjamal/quickcd/blob/static/monotab-demo.gif?raw=true)
 
-> A command to (really quickly) open a new terminal tab in any of the directories or submodules in your repo.
+> Note: `quickcd` was previously called `monotab`, feel free to replace `monotab` with `quickcd` in the
+> demo above as the cli subcommands and behaviours are unchanged.
 
 ## Features
 
@@ -118,7 +121,7 @@ To this you will need to add an alias to your `.bashrc` or `.zshrc`
 ```bash
 # Assuming you use bash
 
-printf "\n# quickcd\neval \$(quickcd --alias)\n" >> ~/.bashrc
+printf "\n# quickcd\neval \$(quick-change-directory --alias)\n" >> ~/.bashrc
 ```
 
 Now you can use `quickcd` to get the familiar interactive CLI,
@@ -130,7 +133,7 @@ to the directory.
 Just pass in a value to `--alias`
 
 ```bash
-printf "\n# quickcd\neval \$(quickcd --alias qcd)\n" >> ~/.bashrc
+printf "\n# quickcd\neval \$(quick-change-directory --alias qcd)\n" >> ~/.bashrc
 ```
 
 Open running this, your alias will be `qcd` instead of `quickcd`.
@@ -145,12 +148,18 @@ Just go into your `.bashrc` or `.zshrc` and paste the following at the end.
 
 ```bash
 function quickcd {
-    DIR_PATH=$( [[ ! -z "$1" ]] && (qcd $1 --notab 3>&1 1>&2 2>&3) || (qcd --notab 3>&1 1>&2 2>&3) );
+    DIR_PATH=$( [[ ! -z "$1" ]] && \
+      (quick-change-directory $1 --notab 3>&1 1>&2 2>&3) \
+        || (quick-change-directory --notab 3>&1 1>&2 2>&3) \
+      );
+
     [[ ! -z "$DIR_PATH" ]] && cd $DIR_PATH || echo "CANCELLED";
 };
+
+alias qcd="quickcd"
 ```
 
-Replaced `quickcd` with anything else if you want the command to be called anything other than `quickcd`.
+Replaced `quickcd`, and `qcd` with anything else if you want the command to be called anything other than `quickcd` and `qcd`.
 
 ## Behaviour
 
