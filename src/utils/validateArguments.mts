@@ -24,11 +24,11 @@ export async function validateArguments(args: string[]) {
   namedArgsSet.delete("fromAlias");
   namedArgsSet.delete("from-alias");
 
-  namedArgsSet.delete("setup");
-
   if (namedArgsSet.has("setup")) {
     namedArgsSet.delete("efficient");
   }
+
+  namedArgsSet.delete("setup");
 
   if (namedArgsSet.size > 0) {
     const arg = [...namedArgsSet][0];

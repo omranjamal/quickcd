@@ -10,7 +10,9 @@ export async function runAlias() {
 
   console.log(
     typeof args.alias === "string"
-      ? aliasScript.replace("quickcd", args.alias)
+      ? aliasScript
+          .replace("function quickcd", `function ${args.alias}`)
+          .replace("--alias quickcd", `--alias ${args.alias}`)
       : aliasScript
   );
 

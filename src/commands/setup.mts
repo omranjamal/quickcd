@@ -1,5 +1,5 @@
 import fs from "fs";
-import highlight from "cli-highlight";
+import { highlight } from "cli-highlight";
 import { returnOf } from "scope-utilities";
 import { _dirname } from "../paths.mjs";
 import path from "path";
@@ -19,7 +19,9 @@ export async function runSetup() {
 
   const aliasScript =
     typeof args.alias === "string"
-      ? aliasScriptString.replace("quickcd", args.alias)
+      ? aliasScriptString
+          .replace("function quickcd", `function ${args.alias}`)
+          .replace("--alias quickcd", `--alias ${args.alias}`)
       : aliasScriptString;
 
   const zshrcPath = path.join(process.env.HOME ?? "~/", ".zshrc");
