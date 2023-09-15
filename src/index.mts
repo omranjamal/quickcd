@@ -305,14 +305,17 @@ async function main() {
         }),
       ];
 
-      const matchedPaths = globbySync("./**/.{git,monotabrc.json}", {
-        cwd: root,
-        gitignore: true,
-        onlyFiles: false,
-        expandDirectories: true,
-        ignore: excludeGlobs,
-        suppressErrors: true,
-      });
+      const matchedPaths =
+        config?.includeGitRepos ?? true
+          ? globbySync("./**/.git", {
+              cwd: root,
+              gitignore: true,
+              onlyFiles: false,
+              expandDirectories: true,
+              ignore: excludeGlobs,
+              suppressErrors: true,
+            })
+          : [];
 
       for (const matchedPath of matchedPaths) {
         const mactchedFullPath = path.dirname(path.join(root, matchedPath));

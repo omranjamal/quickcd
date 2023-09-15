@@ -2,25 +2,34 @@
   "type": "object",
   "properties": {
     "npmWorkspaces": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": true
     },
     "yarnWorkspaces": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": true
     },
     "pnpmWorkspaces": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": true
+    },
+    "includeGitRepos": {
+      "type": "boolean",
+      "default": true
     },
     "include": {
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "default": []
     },
     "exclude": {
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "default": []
     },
     "$schema": {
       "type": "string"
