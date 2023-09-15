@@ -17,3 +17,5 @@ export const schema = z
     })
   )
   .strict();
+
+export type ConfigSchemaType = z.infer<typeof schema>;
