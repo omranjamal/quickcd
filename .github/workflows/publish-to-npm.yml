@@ -1,0 +1,39 @@
+name: Publish Package to NPM
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  publish:
+    permissions:
+      contents: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Check for new version
+        uses: salsify/action-detect-and-tag-new-version@v2
+        id: detect-new-version
+
+      - name: Publish to NPM
+        if: steps.detect-new-version.outputs.tag != ''
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          echo "Publishing to NPM..."
+          sudo npm install -g pnpm
+
+          pnpm install
+          pnpm run build
+          pnpm publish --access public --no-git-checks
