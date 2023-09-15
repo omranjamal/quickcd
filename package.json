@@ -1,7 +1,7 @@
 {
-  "name": "quickdir",
+  "name": "quickcd",
   "version": "1.2.5",
-  "description": "Open a terminal tab to any folder or submodule inside a directory or monorepo.",
+  "description": "interactively cd to any folder or submodule inside a directory or monorepo.",
   "keywords": [
     "tab",
     "duplication",
@@ -12,8 +12,8 @@
   ],
   "main": "./dist/index.mjs",
   "bin": {
-    "quickdir": "./dist/index.mjs",
-    "qdir": "./dist/index.mjs"
+    "quickcd": "./dist/index.mjs",
+    "qcd": "./dist/index.mjs"
   },
   "author": {
     "name": "Omran Jamal",
@@ -51,6 +51,6 @@
   "license": "CC0-1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/omranjamal/quickdir.git"
+    "url": "https://github.com/omranjamal/quickcd.git"
   }
 }

@@ -1,14 +1,14 @@
-![npm](https://img.shields.io/npm/v/quickdir)
-![NPM](https://img.shields.io/npm/l/quickdir)
-![GitHub issues](https://img.shields.io/github/issues/omranjamal/quickdir)
-![npm bundle size](https://img.shields.io/bundlephobia/min/quickdir)
-![npm](https://img.shields.io/npm/dw/quickdir)
-![GitHub forks](https://img.shields.io/github/forks/omranjamal/quickdir)
-![GitHub Repo stars](https://img.shields.io/github/stars/omranjamal/quickdir)
+![npm](https://img.shields.io/npm/v/quickcd)
+![NPM](https://img.shields.io/npm/l/quickcd)
+![GitHub issues](https://img.shields.io/github/issues/omranjamal/quickcd)
+![npm bundle size](https://img.shields.io/bundlephobia/min/quickcd)
+![npm](https://img.shields.io/npm/dw/quickcd)
+![GitHub forks](https://img.shields.io/github/forks/omranjamal/quickcd)
+![GitHub Repo stars](https://img.shields.io/github/stars/omranjamal/quickcd)
 
-# quickdir
+# quickcd
 
-![quickdir demo](https://github.com/omranjamal/quickdir/blob/static/quickdir-demo.gif?raw=true)
+![quickcd demo](https://github.com/omranjamal/quickcd/blob/static/monotab-demo.gif?raw=true)
 
 > A command to (really quickly) open a new terminal tab in any of the directories or submodules in your repo.
 
@@ -25,7 +25,7 @@
 - Filter as first argument for faster filtering.
 - Automatically opens tab if there is only one match.
 
-**Note:** `quickdir` works best with repositories that have multiple submodules, but true monorepos are supported via `.quickdirrc.json` or package manage workspace definitions.
+**Note:** `quickcd` works best with repositories that have multiple submodules, but true monorepos are supported via `.quickcdrc.json` or package manage workspace definitions.
 
 See the [Configuration](#configuration) section for available
 configuration options, and the example configuration on
@@ -34,21 +34,21 @@ how to setup monorepos.
 ## Installation
 
 ```bash
-npm install -g quickdir
+npm install -g quickcd
 ```
 
 ## Usage
 
 ### Basics
 
-Just write `quickdir` or `qdir` under any repository that contains submodules, and it should start working.
+Just write `quickcd` or `qcd` under any repository that contains submodules, and it should start working.
 
 ```bash
 # this starts an interactive directory selector
-quickdir
+quickcd
 
 # this one too, use them interchangably
-qdir
+qcd
 ```
 
 ### Tab Duplication
@@ -57,16 +57,16 @@ qdir
 # this is just using the filter and relying on the
 # assumption that this will only have one listing.
 
-qdir .
+qcd .
 ```
 
-Alternatively. Launch `qdir` press `.` and then press `Enter`
+Alternatively. Launch `qcd` press `.` and then press `Enter`
 
-Alternatively to the alternative: Launch `qdir` and then press `Enter`
+Alternatively to the alternative: Launch `qcd` and then press `Enter`
 
 ### Filter The List
 
-Launch `qdir` then start typing.
+Launch `qcd` then start typing.
 
 Alternatively, pass in a second argument to pre-filter
 the list.
@@ -75,31 +75,31 @@ the list.
 # this will only show a list where the items all
 # have "end" in them.
 
-qdir end
+qcd end
 ```
 
 ## Configuration
 
-You may create a `.quickdirrc.json` file the root
-directory of your repository and `quickdir` will automatically
+You may create a `.quickcdrc.json` file the root
+directory of your repository and `quickcd` will automatically
 load it. This is especially useful for monorepos where
 the subdirectiories are not necessarily git submodules.
 
 The file should be a json file in the following format.
 
 ```typescript
-interface quickdirConfigFileInterface {
+interface quickcdConfigFileInterface {
   include: string | string[];
   exclude: string | string[];
 }
 ```
 
 Both `include` and `exclude` can be a string or an array of strings
-that are glob patterns. quickdir uses [sindresorhus/globby](https://github.com/sindresorhus/globby) under the hood to support this.
+that are glob patterns. quickcd uses [sindresorhus/globby](https://github.com/sindresorhus/globby) under the hood to support this.
 
 ### Example Monorepo Configuration
 
-`.quickdirrc.json`
+`.quickcdrc.json`
 
 ```json
 {
@@ -118,7 +118,7 @@ To this you will need to add an alias to your `.bashrc` or `.zshrc`
 ```bash
 # Assuming you use bash
 
-printf "\n# quickdir\neval \$(quickdir --alias)\n" >> ~/.bashrc
+printf "\n# quickcd\neval \$(quickcd --alias)\n" >> ~/.bashrc
 ```
 
 Now you can use `quickcd` to get the familiar interactive CLI,
@@ -130,7 +130,7 @@ to the directory.
 Just pass in a value to `--alias`
 
 ```bash
-printf "\n# quickdir\neval \$(quickdir --alias qcd)\n" >> ~/.bashrc
+printf "\n# quickcd\neval \$(quickcd --alias qcd)\n" >> ~/.bashrc
 ```
 
 Open running this, your alias will be `qcd` instead of `quickcd`.
@@ -145,7 +145,7 @@ Just go into your `.bashrc` or `.zshrc` and paste the following at the end.
 
 ```bash
 function quickcd {
-    DIR_PATH=$( [[ ! -z "$1" ]] && (qdir $1 --notab 3>&1 1>&2 2>&3) || (qdir --notab 3>&1 1>&2 2>&3) );
+    DIR_PATH=$( [[ ! -z "$1" ]] && (qcd $1 --notab 3>&1 1>&2 2>&3) || (qcd --notab 3>&1 1>&2 2>&3) );
     [[ ! -z "$DIR_PATH" ]] && cd $DIR_PATH || echo "CANCELLED";
 };
 ```
@@ -156,8 +156,8 @@ Replaced `quickcd` with anything else if you want the command to be called anyth
 
 ### Repo Root Detection
 
-`quickdir` travels up the chain of directories from current working directory
-and looks for the `.git` directory or the `quickdirrc.json` file. If there are multiple
+`quickcd` travels up the chain of directories from current working directory
+and looks for the `.git` directory or the `quickcdrc.json` file. If there are multiple
 along the parent directory chain, the directory that matches at the highest level
 is used.
 
@@ -168,12 +168,12 @@ of any kind.
 
 ### Singluar Match
 
-If there is only a single match, `quickdir` automatically creates a tab in that
+If there is only a single match, `quickcd` automatically creates a tab in that
 single matched path.
 
 ## Supported On
 
-`quickdir` uses [mklement0/ttab](https://github.com/mklement0/ttab)
+`quickcd` uses [mklement0/ttab](https://github.com/mklement0/ttab)
 under the hood to create terminal tabs. As such the following
 terminals are currnently supported on Linux and MacOS.
 

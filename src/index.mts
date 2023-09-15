@@ -9,7 +9,7 @@ import { returnOf } from "scope-utilities";
 import { globbySync } from "globby";
 import chalk from "chalk";
 import enquirer from "enquirer";
-import { schema } from "./quickdirrcSchema.mjs";
+import { schema } from "./quickcdrcSchema.mjs";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { parse as parseYAML } from "yaml";
@@ -30,13 +30,13 @@ const packageJSON = JSON.parse(
 
 const help = `
 ${art}
-quickdir v${packageJSON.version}
+quickcd v${packageJSON.version}
 
 ${packageJSON.description}
 
 Usage:
 
-qdir [filter] [--notab]
+qcd [filter] [--notab]
       Renders an interactive list of directories that you potentially want to
       open a new tab in.
 
@@ -50,15 +50,15 @@ qdir [filter] [--notab]
                 cd-ing in the current terminal.
 
 
-qdir --alias [alias] 
+qcd --alias [alias] 
       Prints a bash script that can be eval-ed to introduce
       a cli alias which allows you to cd in the current terminal
       instead of opening a new tab.
 
-qdir -h, --help       Show this help menu
-qdir -v, --version  Show installed version
+qcd -h, --help       Show this help menu
+qcd -v, --version  Show installed version
 
-Note: quickdir and qdir are aliased, you can use interchangably.
+Note: quickcd and qcd are aliased, you can use interchangably.
 `;
 
 const namedArgsSet = new Set<string>(Object.keys(args));
@@ -120,16 +120,16 @@ async function main() {
 
     while (serachIn > rootPath) {
       const gitRootPath = path.join(serachIn, "./.git");
-      const quickdirrcRootPath = path.join(serachIn, "./.quickdirrc.json");
+      const quickcdrcRootPath = path.join(serachIn, "./.quickcdrc.json");
 
       const gitFolderExists =
         fs.existsSync(gitRootPath) && fs.lstatSync(gitRootPath).isDirectory();
 
-      const quickdirrcFileExists =
-        fs.existsSync(quickdirrcRootPath) &&
-        fs.lstatSync(quickdirrcRootPath).isFile();
+      const quickcdrcFileExists =
+        fs.existsSync(quickcdrcRootPath) &&
+        fs.lstatSync(quickcdrcRootPath).isFile();
 
-      if (gitFolderExists || quickdirrcFileExists) {
+      if (gitFolderExists || quickcdrcFileExists) {
         foundIn = serachIn;
       }
 
@@ -173,15 +173,15 @@ async function main() {
     }
 
     function traverse(root: string, map: TargetMapType) {
-      const potentialQuickdirrcPath = path.join(root, ".quickdirrc.json");
+      const potentialQuickcdrcPath = path.join(root, ".quickcdrc.json");
 
       const config = returnOf(() => {
         if (
-          fs.existsSync(potentialQuickdirrcPath) &&
-          fs.lstatSync(potentialQuickdirrcPath).isFile()
+          fs.existsSync(potentialQuickcdrcPath) &&
+          fs.lstatSync(potentialQuickcdrcPath).isFile()
         ) {
           const contents = fs
-            .readFileSync(potentialQuickdirrcPath)
+            .readFileSync(potentialQuickcdrcPath)
             .toString("utf-8");
 
           if (contents.trim().length === 0) {
@@ -195,7 +195,7 @@ async function main() {
             if (!structuredContents.success) {
               console.warn(
                 chalk.yellow(
-                  `${potentialQuickdirrcPath} is of the wrong format.`,
+                  `${potentialQuickcdrcPath} is of the wrong format.`,
                   structuredContents.error
                 )
               );
@@ -206,7 +206,7 @@ async function main() {
             return structuredContents.data;
           } catch {
             console.error(
-              chalk.yellow(`⚠️ ${potentialQuickdirrcPath} is not valid JSON.`)
+              chalk.yellow(`⚠️ ${potentialQuickcdrcPath} is not valid JSON.`)
             );
           }
         }
@@ -214,7 +214,7 @@ async function main() {
 
       add(null, root);
 
-      const quickdirrcIncludedGlobs = returnOf(() => {
+      const quickcdrcIncludedGlobs = returnOf(() => {
         if (config?.include) {
           if (typeof config.include === "string") {
             return [config.include];
@@ -285,7 +285,7 @@ async function main() {
       });
 
       const includeGlobs = [
-        ...quickdirrcIncludedGlobs,
+        ...quickcdrcIncludedGlobs,
         ...npmWorkspaces,
         ...pnpmWorkspaces,
       ];
