@@ -20,7 +20,7 @@ dependencies:
   globby:
     specifier: ^13.2.2
     version: 13.2.2
-  monotab:
+  quickdir:
     specifier: 'link:'
     version: 'link:'
   scope-utilities:

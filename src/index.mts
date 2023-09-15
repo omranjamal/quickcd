@@ -9,7 +9,7 @@ import { returnOf } from "scope-utilities";
 import { globbySync } from "globby";
 import chalk from "chalk";
 import enquirer from "enquirer";
-import { schema } from "./monotabrcSchema.mjs";
+import { schema } from "./quickdirrcSchema.mjs";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { parse as parseYAML } from "yaml";
@@ -30,13 +30,13 @@ const packageJSON = JSON.parse(
 
 const help = `
 ${art}
-monotab v${packageJSON.version}
+quickdir v${packageJSON.version}
 
 ${packageJSON.description}
 
 Usage:
 
-matb [filter] [--notab]
+qdir [filter] [--notab]
       Renders an interactive list of directories that you potentially want to
       open a new tab in.
 
@@ -50,15 +50,15 @@ matb [filter] [--notab]
                 cd-ing in the current terminal.
 
 
-matb --alias [alias] 
+qdir --alias [alias] 
       Prints a bash script that can be eval-ed to introduce
       a cli alias which allows you to cd in the current terminal
       instead of opening a new tab.
 
-matb -h, --help       Show this help menu
-matb -v, --version  Show installed version
+qdir -h, --help       Show this help menu
+qdir -v, --version  Show installed version
 
-Note: monotab and mtab are alias, you can use interchangably.
+Note: quickdir and qdir are aliased, you can use interchangably.
 `;
 
 const namedArgsSet = new Set<string>(Object.keys(args));
@@ -76,7 +76,7 @@ if ("h" in args || "help" in args) {
 
   console.log(
     typeof args.alias === "string"
-      ? aliasScript.replace("monocd", args.alias)
+      ? aliasScript.replace("quickcd", args.alias)
       : aliasScript
   );
 
@@ -120,16 +120,16 @@ async function main() {
 
     while (serachIn > rootPath) {
       const gitRootPath = path.join(serachIn, "./.git");
-      const monotabrcRootPath = path.join(serachIn, "./.monotabrc.json");
+      const quickdirrcRootPath = path.join(serachIn, "./.quickdirrc.json");
 
       const gitFolderExists =
         fs.existsSync(gitRootPath) && fs.lstatSync(gitRootPath).isDirectory();
 
-      const monotabrcFileExists =
-        fs.existsSync(monotabrcRootPath) &&
-        fs.lstatSync(monotabrcRootPath).isFile();
+      const quickdirrcFileExists =
+        fs.existsSync(quickdirrcRootPath) &&
+        fs.lstatSync(quickdirrcRootPath).isFile();
 
-      if (gitFolderExists || monotabrcFileExists) {
+      if (gitFolderExists || quickdirrcFileExists) {
         foundIn = serachIn;
       }
 
@@ -151,9 +151,9 @@ async function main() {
     );
   }
 
-  const monoRoot = monoRepoRoot?.path ?? process.cwd();
+  const quickRoot = monoRepoRoot?.path ?? process.cwd();
 
-  console.info(`Using Root: ${monoRoot}`);
+  console.info(`Using Root: ${quickRoot}`);
 
   const targets = returnOf(() => {
     const targetMap: TargetMapType = {};
@@ -173,15 +173,15 @@ async function main() {
     }
 
     function traverse(root: string, map: TargetMapType) {
-      const potentialMonotabrcPath = path.join(root, ".monotabrc.json");
+      const potentialQuickdirrcPath = path.join(root, ".quickdirrc.json");
 
       const config = returnOf(() => {
         if (
-          fs.existsSync(potentialMonotabrcPath) &&
-          fs.lstatSync(potentialMonotabrcPath).isFile()
+          fs.existsSync(potentialQuickdirrcPath) &&
+          fs.lstatSync(potentialQuickdirrcPath).isFile()
         ) {
           const contents = fs
-            .readFileSync(potentialMonotabrcPath)
+            .readFileSync(potentialQuickdirrcPath)
             .toString("utf-8");
 
           if (contents.trim().length === 0) {
@@ -195,7 +195,7 @@ async function main() {
             if (!structuredContents.success) {
               console.warn(
                 chalk.yellow(
-                  `${potentialMonotabrcPath} is of the wrong format.`,
+                  `${potentialQuickdirrcPath} is of the wrong format.`,
                   structuredContents.error
                 )
               );
@@ -206,7 +206,7 @@ async function main() {
             return structuredContents.data;
           } catch {
             console.error(
-              chalk.yellow(`⚠️ ${potentialMonotabrcPath} is not valid JSON.`)
+              chalk.yellow(`⚠️ ${potentialQuickdirrcPath} is not valid JSON.`)
             );
           }
         }
@@ -214,7 +214,7 @@ async function main() {
 
       add(null, root);
 
-      const monotabrcIncludedGlobs = returnOf(() => {
+      const quickdirrcIncludedGlobs = returnOf(() => {
         if (config?.include) {
           if (typeof config.include === "string") {
             return [config.include];
@@ -285,7 +285,7 @@ async function main() {
       });
 
       const includeGlobs = [
-        ...monotabrcIncludedGlobs,
+        ...quickdirrcIncludedGlobs,
         ...npmWorkspaces,
         ...pnpmWorkspaces,
       ];
@@ -338,7 +338,7 @@ async function main() {
       }
     }
 
-    traverse(monoRoot, targetMap);
+    traverse(quickRoot, targetMap);
 
     return Object.values(targetMap);
   }).sort((a, b) => {

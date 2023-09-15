@@ -1,7 +1,7 @@
 {
-  "name": "monotab",
-  "version": "1.2.4",
-  "description": "Open a terminal tab to any folder or submodule inside a mono-repo.",
+  "name": "quickdir",
+  "version": "1.2.5",
+  "description": "Open a terminal tab to any folder or submodule inside a directory or monorepo.",
   "keywords": [
     "tab",
     "duplication",
@@ -12,8 +12,8 @@
   ],
   "main": "./dist/index.mjs",
   "bin": {
-    "monotab": "./dist/index.mjs",
-    "mtab": "./dist/index.mjs"
+    "quickdir": "./dist/index.mjs",
+    "qdir": "./dist/index.mjs"
   },
   "author": {
     "name": "Omran Jamal",
@@ -34,7 +34,6 @@
     "enquirer": "^2.4.1",
     "execa": "^7.2.0",
     "globby": "^13.2.2",
-    "monotab": "link:",
     "scope-utilities": "^1.0.0",
     "ttab": "0.8.0",
     "yaml": "^2.3.2",
@@ -52,6 +51,6 @@
   "license": "CC0-1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/omranjamal/monotab.git"
+    "url": "https://github.com/omranjamal/quickdir.git"
   }
 }

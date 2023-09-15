@@ -1,15 +1,14 @@
-![npm](https://img.shields.io/npm/v/monotab)
-![NPM](https://img.shields.io/npm/l/monotab)
-![GitHub issues](https://img.shields.io/github/issues/omranjamal/monotab)
-![npm bundle size](https://img.shields.io/bundlephobia/min/monotab)
-![npm](https://img.shields.io/npm/dw/monotab)
-![GitHub forks](https://img.shields.io/github/forks/omranjamal/monotab)
-![GitHub Repo stars](https://img.shields.io/github/stars/omranjamal/monotab)
+![npm](https://img.shields.io/npm/v/quickdir)
+![NPM](https://img.shields.io/npm/l/quickdir)
+![GitHub issues](https://img.shields.io/github/issues/omranjamal/quickdir)
+![npm bundle size](https://img.shields.io/bundlephobia/min/quickdir)
+![npm](https://img.shields.io/npm/dw/quickdir)
+![GitHub forks](https://img.shields.io/github/forks/omranjamal/quickdir)
+![GitHub Repo stars](https://img.shields.io/github/stars/omranjamal/quickdir)
 
+# quickdir
 
-# monotab
-
-![monotab demo](https://github.com/omranjamal/monotab/blob/static/monotab-demo.gif?raw=true)
+![quickdir demo](https://github.com/omranjamal/quickdir/blob/static/quickdir-demo.gif?raw=true)
 
 > A command to (really quickly) open a new terminal tab in any of the directories or submodules in your repo.
 
@@ -26,30 +25,30 @@
 - Filter as first argument for faster filtering.
 - Automatically opens tab if there is only one match.
 
-**Note:** `monotab` works best with repositories that have multiple submodules, but true monorepos are supported via `.monotabrc.json`.
+**Note:** `quickdir` works best with repositories that have multiple submodules, but true monorepos are supported via `.quickdirrc.json` or package manage workspace definitions.
 
 See the [Configuration](#configuration) section for available
-configuration options, and the example configuration on 
+configuration options, and the example configuration on
 how to setup monorepos.
 
 ## Installation
 
 ```bash
-npm install -g monotab
+npm install -g quickdir
 ```
 
 ## Usage
 
 ### Basics
 
-Just write `monotab` or `mtab` under any repository that contains submodules, and it should start working.
+Just write `quickdir` or `qdir` under any repository that contains submodules, and it should start working.
 
 ```bash
 # this starts an interactive directory selector
-monotab
+quickdir
 
 # this one too, use them interchangably
-mtab
+qdir
 ```
 
 ### Tab Duplication
@@ -58,16 +57,16 @@ mtab
 # this is just using the filter and relying on the
 # assumption that this will only have one listing.
 
-mtab .
+qdir .
 ```
 
-Alternatively. Launch `mtab` press `.` and then press `Enter`
+Alternatively. Launch `qdir` press `.` and then press `Enter`
 
-Alternatively to the alternative: Launch `mtab` and then press `Enter`
+Alternatively to the alternative: Launch `qdir` and then press `Enter`
 
 ### Filter The List
 
-Launch `mtab` then start typing.
+Launch `qdir` then start typing.
 
 Alternatively, pass in a second argument to pre-filter
 the list.
@@ -76,41 +75,36 @@ the list.
 # this will only show a list where the items all
 # have "end" in them.
 
-mtab end
+qdir end
 ```
 
 ## Configuration
 
-You may create a `.monotabrc.json` file the root
-directory of your repository and `monotab` will automatically
+You may create a `.quickdirrc.json` file the root
+directory of your repository and `quickdir` will automatically
 load it. This is especially useful for monorepos where
 the subdirectiories are not necessarily git submodules.
 
 The file should be a json file in the following format.
 
 ```typescript
-interface MonotabConfigFileInterface {
-    include: string | string[];
-    exclude: string | string[];
+interface quickdirConfigFileInterface {
+  include: string | string[];
+  exclude: string | string[];
 }
 ```
 
 Both `include` and `exclude` can be a string or an array of strings
-that are glob patterns. Monotab uses [sindresorhus/globby](https://github.com/sindresorhus/globby) under the hood to support this.
+that are glob patterns. quickdir uses [sindresorhus/globby](https://github.com/sindresorhus/globby) under the hood to support this.
 
 ### Example Monorepo Configuration
 
-`.monotabrc.json`
+`.quickdirrc.json`
 
 ```json
 {
-    "include": [
-        "packages/*",
-        "infra/*"
-    ],
-    "exclude": [
-        "**/node_modules/**"
-    ]
+  "include": ["packages/*", "infra/*"],
+  "exclude": ["**/node_modules/**"]
 }
 ```
 
@@ -124,10 +118,10 @@ To this you will need to add an alias to your `.bashrc` or `.zshrc`
 ```bash
 # Assuming you use bash
 
-printf "\n# monotab\neval \$(monotab --alias)\n" >> ~/.bashrc
+printf "\n# quickdir\neval \$(quickdir --alias)\n" >> ~/.bashrc
 ```
 
-Now you can use `monocd` to get the familiar interactive CLI,
+Now you can use `quickcd` to get the familiar interactive CLI,
 but instead of opening a new terminal tab, it will cd you
 to the directory.
 
@@ -136,10 +130,10 @@ to the directory.
 Just pass in a value to `--alias`
 
 ```bash
-printf "\n# monotab\neval \$(monotab --alias cdm)\n" >> ~/.bashrc
+printf "\n# quickdir\neval \$(quickdir --alias qcd)\n" >> ~/.bashrc
 ```
 
-Open running this, your alias will be `cdm` instead of `monocd`.
+Open running this, your alias will be `qcd` instead of `quickcd`.
 
 ### Alias Performance
 
@@ -150,20 +144,20 @@ We hear you, I hate slow terminal startups too.
 Just go into your `.bashrc` or `.zshrc` and paste the following at the end.
 
 ```bash
-function monocd {
-    DIR_PATH=$( [[ ! -z "$1" ]] && (mtab $1 --notab 3>&1 1>&2 2>&3) || (mtab --notab 3>&1 1>&2 2>&3) );
+function quickcd {
+    DIR_PATH=$( [[ ! -z "$1" ]] && (qdir $1 --notab 3>&1 1>&2 2>&3) || (qdir --notab 3>&1 1>&2 2>&3) );
     [[ ! -z "$DIR_PATH" ]] && cd $DIR_PATH || echo "CANCELLED";
 };
 ```
 
-Replaced `monocd` with anything else if you want the command to be called anything other than `monocd`.
+Replaced `quickcd` with anything else if you want the command to be called anything other than `quickcd`.
 
 ## Behaviour
 
 ### Repo Root Detection
 
-`monotab` travels up the chain of directories from current working directory
-and looks for the `.git` directory or the `monotabrc.json` file. If there are multiple
+`quickdir` travels up the chain of directories from current working directory
+and looks for the `.git` directory or the `quickdirrc.json` file. If there are multiple
 along the parent directory chain, the directory that matches at the highest level
 is used.
 
@@ -174,20 +168,20 @@ of any kind.
 
 ### Singluar Match
 
-If there is only a single match, `monotab` automatically creates a tab in that
+If there is only a single match, `quickdir` automatically creates a tab in that
 single matched path.
 
 ## Supported On
 
-`monotab` uses [mklement0/ttab](https://github.com/mklement0/ttab)
+`quickdir` uses [mklement0/ttab](https://github.com/mklement0/ttab)
 under the hood to create terminal tabs. As such the following
 terminals are currnently supported on Linux and MacOS.
 
 1. Linux
-    - Gnome Terminal
+   - Gnome Terminal
 2. MacOS
-    - Terminal _(not tested)_
-    - iTerm2 _(not tested)_
+   - Terminal _(not tested)_
+   - iTerm2 _(not tested)_
 
 ## Roadmap
 
