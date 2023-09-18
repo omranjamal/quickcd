@@ -1,6 +1,6 @@
 {
   "name": "quickcd",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "interactively cd to any folder or submodule inside a directory or monorepo.",
   "keywords": [
     "tab",
