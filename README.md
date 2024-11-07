@@ -1,3 +1,6 @@
+> # ARCHIVAL NOTICE
+> This tool has been superseeded by the more stable and blazingly fast [mono-cd](https://github.com/omranjamal/mono-cd).
+
 ![npm](https://img.shields.io/npm/v/quickcd)
 ![NPM](https://img.shields.io/npm/l/quickcd)
 ![GitHub issues](https://img.shields.io/github/issues/omranjamal/quickcd)
